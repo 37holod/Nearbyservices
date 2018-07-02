@@ -1,0 +1,33 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:service="urn:import:net.nearbyservices.client">
+
+
+	<ui:style>
+	.statusDiv {
+		text-align: left;
+		margin: 1em;
+	}
+	
+	.linksDiv {
+		text-align: left;
+	}
+	</ui:style>
+
+	<g:HTMLPanel>
+
+
+		<div class="{style.statusDiv}">
+			<div>
+				<b>Welcome to Nearbyservices</b>
+			</div>
+
+			<div class='{style.linksDiv}'>
+				<g:Anchor href='javascript:;' ui:field='signInLink'>Test</g:Anchor>
+				&nbsp;
+				<g:Anchor href='javascript:;' ui:field='addServiceLink'>Add service</g:Anchor>
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder>
