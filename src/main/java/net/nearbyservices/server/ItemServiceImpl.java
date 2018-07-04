@@ -29,10 +29,7 @@ public class ItemServiceImpl extends RemoteServiceServlet implements ItemService
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void saveOrUpdate(ServiceDTO serviceDto) throws Exception {
 
-		// Verify that the input is valid.
 		if (Validator.isBlank(serviceDto.getTitle()) || Validator.isBlank(serviceDto.getAutor())) {
-			// If the input is not valid, throw an IllegalArgumentException back to
-			// the client.
 			throw new IllegalArgumentException("Please enter at least the Title and the Autor of the book");
 		}
 

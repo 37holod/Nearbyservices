@@ -28,7 +28,8 @@ import net.nearbyservices.shared.Validator;
 public class TopPanel extends Composite {
 	private final ItemServiceAsync itemService = GWT.create(ItemService.class);
 	private static final String SERVER_ERROR = "An error occurred while "
-			+ "attempting to contact the server. Please check your network " + "connection and try again.";
+			+ "attempting to contact the server. Please check your network "
+			+ "connection and try again.";
 	private CompositeListener compositeListener;
 
 	interface Binder extends UiBinder<Widget, TopPanel> {
@@ -86,45 +87,46 @@ public class TopPanel extends Composite {
 
 		itemService.findAllEntries(
 
-				new AsyncCallback<List<ServiceDTO>>() {
+		new AsyncCallback<List<ServiceDTO>>() {
 
-					public void onFailure(Throwable caught) {
-						dialogBox.setText("Remote Procedure Call - Failure");
-						serverResponseLabel.addStyleName("serverResponseLabelError");
-						serverResponseLabel.setHTML(caught.toString());
-						dialogBox.center();
-						closeButton.setFocus(true);
+			public void onFailure(Throwable caught) {
+				dialogBox.setText("Remote Procedure Call - Failure");
+				serverResponseLabel.addStyleName("serverResponseLabelError");
+				serverResponseLabel.setHTML(caught.toString());
+				dialogBox.center();
+				closeButton.setFocus(true);
+			}
+
+			public void onSuccess(List<ServiceDTO> data) {
+				dialogBox.setText("Remote Procedure Call");
+				serverResponseLabel.removeStyleName("serverResponseLabelError");
+
+				if (data != null && !data.isEmpty()) {
+					StringBuffer buffer = new StringBuffer();
+					for (ServiceDTO book : data) {
+						buffer.append(book.toString());
+						buffer.append("<br /><br />");
 					}
-
-					public void onSuccess(List<ServiceDTO> data) {
-						dialogBox.setText("Remote Procedure Call");
-						serverResponseLabel.removeStyleName("serverResponseLabelError");
-
-						if (data != null && !data.isEmpty()) {
-							StringBuffer buffer = new StringBuffer();
-							for (ServiceDTO book : data) {
-								buffer.append(book.toString());
-								buffer.append("<br /><br />");
-							}
-							serverResponseLabel.setHTML(buffer.toString());
-						} else {
-							serverResponseLabel.setHTML("No book information store in the database.");
-						}
-						dialogBox.center();
-						closeButton.setFocus(true);
-					}
-				});
+					serverResponseLabel.setHTML(buffer.toString());
+				} else {
+					serverResponseLabel
+							.setHTML("No book information store in the database.");
+				}
+				dialogBox.center();
+				closeButton.setFocus(true);
+			}
+		});
 	}
 
 	private void showDialog() {
-		DialogBox dialogBox = new DialogBox();
+		final DialogBox dialogBox = new DialogBox();
 		FlexTable table = new FlexTable();
-		TextBox textBoxNickName = new TextBox();
-		TextBox textBoxSubject = new TextBox();
-		TextBox textBoxDetail = new TextBox();
+		final TextBox textBoxNickName = new TextBox();
+		final TextBox textBoxSubject = new TextBox();
+		final TextBox textBoxDetail = new TextBox();
 		Button buttonAdd = new Button("Add");
 		Button buttonClose = new Button("Close");
-		HTML serverResponseLabel = new HTML();
+		final HTML serverResponseLabel = new HTML();
 		table.getFlexCellFormatter().setColSpan(0, 0, 2);
 		table.setWidget(1, 0, new Label("Name"));
 		table.setWidget(1, 1, textBoxNickName);
@@ -135,7 +137,8 @@ public class TopPanel extends Composite {
 		table.setWidget(4, 0, buttonClose);
 		table.setWidget(4, 1, buttonAdd);
 		table.setWidget(5, 0, serverResponseLabel);
-		table.getCellFormatter().setHorizontalAlignment(4, 1, HorizontalPanel.ALIGN_RIGHT);
+		table.getCellFormatter().setHorizontalAlignment(4, 1,
+				HorizontalPanel.ALIGN_RIGHT);
 
 		dialogBox.setText("New service");
 		dialogBox.setModal(true);
@@ -153,12 +156,14 @@ public class TopPanel extends Composite {
 		});
 		buttonAdd.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				saveBook(textBoxNickName.getText(), textBoxSubject.getText(), textBoxDetail.getText());
+				saveBook(textBoxNickName.getText(), textBoxSubject.getText(),
+						textBoxDetail.getText());
 			}
 
 			private void saveBook(String name, String subject, String detail) {
 
-				if (Validator.isBlank(name) || Validator.isBlank(subject) || Validator.isBlank(detail)) {
+				if (Validator.isBlank(name) || Validator.isBlank(subject)
+						|| Validator.isBlank(detail)) {
 					return;
 				}
 
@@ -167,7 +172,8 @@ public class TopPanel extends Composite {
 				itemService.saveOrUpdate(bookDTO, new AsyncCallback<Void>() {
 					public void onFailure(Throwable caught) {
 						dialogBox.setText("Remote Procedure Call - Failure");
-						serverResponseLabel.addStyleName("serverResponseLabelError");
+						serverResponseLabel
+								.addStyleName("serverResponseLabelError");
 						serverResponseLabel.setHTML(caught.toString());
 						dialogBox.center();
 
@@ -175,7 +181,8 @@ public class TopPanel extends Composite {
 
 					public void onSuccess(Void noAnswer) {
 						dialogBox.setText("Remote Procedure Call");
-						serverResponseLabel.removeStyleName("serverResponseLabelError");
+						serverResponseLabel
+								.removeStyleName("serverResponseLabelError");
 						serverResponseLabel.setHTML("OK");
 						dialogBox.center();
 						compositeListener.updateAll();
