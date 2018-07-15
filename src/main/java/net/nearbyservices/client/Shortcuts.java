@@ -1,17 +1,17 @@
 package net.nearbyservices.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTMLTable.Cell;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Shortcuts extends Composite {
@@ -31,22 +31,69 @@ public class Shortcuts extends Composite {
 	private static final Binder binder = GWT.create(Binder.class);
 
 	@UiField
-	FlexTable header;
-	@UiField
-	FlexTable table;
-	@UiField
-	SelectionStyle selectionStyle;
+	ListBox shortcutsCatLb;
 
 	private Listener listener;
-	private int startIndex, selectedRow = -1;
-	private List<String> titles;
+	private List<TitleItem> titles;
+
+	private abstract class TitleItem {
+		protected String title;
+
+		public TitleItem(String title) {
+			this.title = title;
+		}
+
+		abstract String getTitle();
+
+		abstract String getValue();
+	}
+
+	private class All extends TitleItem {
+
+		public All(String title) {
+			super(title);
+			// TODO Auto-generated constructor stub
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getValue() {
+			return null;
+		}
+
+	}
+
+	private class FilterTitle extends TitleItem {
+
+		public FilterTitle(String title) {
+			super(title);
+			// TODO Auto-generated constructor stub
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getValue() {
+			return title;
+		}
+	}
 
 	public Shortcuts() {
 		initWidget(binder.createAndBindUi(this));
 
-		initTable();
 		fetchTitles();
+		titles = new ArrayList<TitleItem>();
 
+	}
+
+	@UiHandler("shortcutsCatLb")
+	void onChange(ChangeEvent event) {
+		if (listener != null) {
+			listener.onItemSelected(titles.get(shortcutsCatLb.getSelectedIndex()).getValue());
+		}
 	}
 
 	public void fetchTitles() {
@@ -54,7 +101,11 @@ public class Shortcuts extends Composite {
 
 			@Override
 			public void onSuccess(List<String> result) {
-				titles = result;
+				titles.clear();
+				titles.add(new All("all"));
+				for (String title : result) {
+					titles.add(new FilterTitle(title));
+				}
 				update();
 			}
 
@@ -66,6 +117,15 @@ public class Shortcuts extends Composite {
 
 	}
 
+	protected void update() {
+		shortcutsCatLb.clear();
+		for (TitleItem titleItem : titles) {
+			shortcutsCatLb.addItem(titleItem.getTitle());
+		}
+		if (listener != null) {
+			listener.onItemSelected(titles.get(shortcutsCatLb.getSelectedIndex()).getValue());
+		}
+	}
 
 	public void setListener(Listener listener) {
 		this.listener = listener;
@@ -76,77 +136,11 @@ public class Shortcuts extends Composite {
 
 	}
 
-	@UiHandler("table")
-	void onTableClicked(ClickEvent event) {
-		// Select the row that was clicked (-1 to account for header row).
-		Cell cell = table.getCellForEvent(event);
-		if (cell != null) {
-			int row = cell.getRowIndex();
-			selectRow(row);
-		}
-	}
-
-
-	private void initTable() {
-
-
-		header.setText(0, 0, "Filters");
-		
-
-	}
-
 	/**
 	 * Selects the given row (relative to the current page).
 	 *
 	 * @param row
 	 *            the row to be selected
 	 */
-	private void selectRow(int row) {
-		if (titles == null) {
-			return;
-		}
-		String item = titles.get(row);
-		if (item == null) {
-			return;
-		}
-
-		styleRow(selectedRow, false);
-		styleRow(row, true);
-
-		selectedRow = row;
-
-		if (listener != null) {
-			listener.onItemSelected(item);
-		}
-	}
-
-	private void styleRow(int row, boolean selected) {
-		if (row != -1) {
-			String style = selectionStyle.selectedRow();
-
-			if (selected) {
-				table.getRowFormatter().addStyleName(row, style);
-			} else {
-				table.getRowFormatter().removeStyleName(row, style);
-			}
-		}
-	}
-
-	private void update() {
-		if (titles == null) {
-			return;
-		}
-		table.clear(true);
-		for (int i = 0; i < titles.size(); ++i) {
-
-			String item = titles.get(i);
-
-			table.setText(i, 0, item);
-		}
-		if (selectedRow == -1) {
-			selectRow(0);
-		}
-		listener.onItemSelected(titles.get(selectedRow));
-	}
 
 }
