@@ -22,6 +22,7 @@
 		line-height: 150%;
 		padding: 20px 40px 20px 10px;
 		font-family: "Times New Roman", Times, serif;
+		font-size: 18px
 	}
 	</ui:style>
 

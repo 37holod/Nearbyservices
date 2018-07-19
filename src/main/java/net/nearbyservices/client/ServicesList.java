@@ -50,7 +50,6 @@ public class ServicesList extends Composite {
 
 	}
 
-
 	public void setListener(Listener listener) {
 		this.listener = listener;
 	}
@@ -81,7 +80,6 @@ public class ServicesList extends Composite {
 
 		table.getColumnFormatter().setWidth(0, "128px");
 	}
-
 
 	private void selectRow(int row) {
 		if (serviceList == null) {
@@ -120,7 +118,6 @@ public class ServicesList extends Composite {
 
 			ServiceDTO item = serviceList.get(i);
 
-
 			table.setText(i, 0, item.getAutor());
 			table.setText(i, 1, item.getTitle());
 		}
@@ -131,8 +128,7 @@ public class ServicesList extends Composite {
 	}
 
 	public void update(String item) {
-
-		itemService.findWithTitle(item, new AsyncCallback<List<ServiceDTO>>() {
+		AsyncCallback<List<ServiceDTO>> asyncCallback = new AsyncCallback<List<ServiceDTO>>() {
 
 			@Override
 			public void onSuccess(List<ServiceDTO> result) {
@@ -145,8 +141,12 @@ public class ServicesList extends Composite {
 				// TODO Auto-generated method stub
 
 			}
-		});
-
+		};
+		if (item != null) {
+			itemService.findWithTitle(item, asyncCallback);
+		} else {
+			itemService.findAllEntries(asyncCallback);
+		}
 	}
 
 }
