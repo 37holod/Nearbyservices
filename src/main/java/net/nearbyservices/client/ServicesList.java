@@ -1,6 +1,9 @@
 package net.nearbyservices.client;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,6 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 import net.nearbyservices.shared.ServiceDTO;
 
 public class ServicesList extends Composite {
+	Logger logger = Logger.getLogger(ServicesList.class.getName());
 	private final ItemServiceAsync itemService = GWT.create(ItemService.class);
 
 	public interface Listener {
@@ -44,6 +48,7 @@ public class ServicesList extends Composite {
 	private List<ServiceDTO> serviceList;
 
 	public ServicesList() {
+		logger.log(Level.INFO, "onLoad");
 		initWidget(binder.createAndBindUi(this));
 
 		initTable();
@@ -56,7 +61,14 @@ public class ServicesList extends Composite {
 
 	@Override
 	protected void onLoad() {
+		logger.log(Level.INFO, "onLoad");
+	}
 
+	@Override
+	protected void onAttach() {
+		logger.log(Level.INFO, "onAttach");
+
+		super.onAttach();
 	}
 
 	@UiHandler("table")
@@ -122,24 +134,25 @@ public class ServicesList extends Composite {
 			table.setText(i, 1, item.getTitle());
 		}
 		if (selectedRow == -1) {
-			selectRow(0);
+//			selectRow(0);
 		}
-		listener.onItemSelected(serviceList.get(selectedRow));
+//		listener.onItemSelected(serviceList.get(selectedRow));
 	}
 
 	public void update(String item) {
+		logger.log(Level.INFO, "update");
 		AsyncCallback<List<ServiceDTO>> asyncCallback = new AsyncCallback<List<ServiceDTO>>() {
 
 			@Override
 			public void onSuccess(List<ServiceDTO> result) {
+
 				serviceList = result;
 				update();
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-
+				logger.log(Level.SEVERE, caught.getMessage(), caught);
 			}
 		};
 		if (item != null) {

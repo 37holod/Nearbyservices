@@ -4,8 +4,9 @@
 	xmlns:service="urn:import:net.nearbyservices.client">
 	<ui:style>
 	.detail {
-		border: 1px solid #666;
 		background-color: white;
+		width: 100%;
+		height: 100%;
 	}
 	
 	.header {
