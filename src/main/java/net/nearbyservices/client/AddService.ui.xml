@@ -4,11 +4,6 @@
 	xmlns:service="urn:import:net.nearbyservices.client">
 
 	<ui:style>
-	.detail {
-		border: 1px solid #666;
-		background-color: white;
-	}
-	
 	.outer {
 		cursor: pointer;
 		width: 100%;
@@ -27,9 +22,9 @@
 		margin-bottom: 0.5em;
 	}
 	
-	.servicesListVP {
-		width: 100%;
-		align-content: center;
+	.addServicesFt {
+		padding: 5px;
+		margin: 5px;
 	}
 	
 	.regpad {
@@ -42,7 +37,7 @@
 		<g:north size='2'>
 			<g:HTMLPanel styleName='{style.header}'>
 				<div class='{style.headerItem}' ui:field='subject'>
-					<b>Services</b>
+					<b>Add service</b>
 				</div>
 
 			</g:HTMLPanel>
@@ -50,9 +45,9 @@
 
 		<g:center>
 			<g:ScrollPanel>
-				<g:VerticalPanel ui:field='servicesListVP'
-					styleName='{style.servicesListVP}'>
-				</g:VerticalPanel>
+				<g:FlexTable ui:field='addServicesFt'
+					styleName='{style.addServicesFt}'>
+				</g:FlexTable>
 			</g:ScrollPanel>
 		</g:center>
 	</g:DockLayoutPanel>

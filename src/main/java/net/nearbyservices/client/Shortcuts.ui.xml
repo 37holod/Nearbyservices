@@ -4,6 +4,7 @@
 	xmlns:service="urn:import:net.nearbyservices.client">
 	<ui:image field='gradient' src='gradient_bg_dark.png'
 		repeatStyle='Horizontal' />
+
 	<ui:style>
 	.detail {
 		border: 1px solid #666;

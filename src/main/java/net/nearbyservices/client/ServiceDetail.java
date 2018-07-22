@@ -1,5 +1,7 @@
 package net.nearbyservices.client;
 
+import net.nearbyservices.shared.ServiceDTO;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -8,9 +10,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
-import net.nearbyservices.shared.ServiceDTO;
-
 public class ServiceDetail extends Composite {
+	private ServiceDTO item;
 
 	interface Binder extends UiBinder<Widget, ServiceDetail> {
 	}
@@ -22,11 +23,15 @@ public class ServiceDetail extends Composite {
 	@UiField
 	HTML body;
 
-	public ServiceDetail() {
+	public ServiceDetail(ServiceDTO item) {
+		this.item = item;
 		initWidget(binder.createAndBindUi(this));
-	}
-
-	public void setItem(ServiceDTO item) {
 		body.setHTML(item.getDetail());
 	}
+
+	@Override
+	public String toString() {
+		return "ServiceDetail/" + item.getId();
+	}
+
 }

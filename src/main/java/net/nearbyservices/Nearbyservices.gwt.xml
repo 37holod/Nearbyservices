@@ -19,8 +19,7 @@
 	<!-- Other module inherits -->
 
 	<!-- Specify the app entry point class. -->
-	<entry-point
-		class='net.nearbyservices.client.Nearbyservices' />
+	<entry-point class='net.nearbyservices.client.Nearbyservices' />
 
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
@@ -28,8 +27,8 @@
 
 	<!-- allow Super Dev Mode -->
 	<add-linker name="xsiframe" />
-	<set-configuration-property
-		name="CssResource.enableGss" value="true" />
-	<set-configuration-property
-		name="CssResource.gssDefaultInUiBinder" value="true" />
+	<set-configuration-property name="CssResource.enableGss"
+		value="true" />
+	<set-configuration-property name="CssResource.gssDefaultInUiBinder"
+		value="true" />
 </module>

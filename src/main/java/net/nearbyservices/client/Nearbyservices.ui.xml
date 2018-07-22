@@ -17,12 +17,8 @@
 			<service:Shortcuts ui:field='shortcuts'
 				styleName='{style.margins}' />
 		</g:west>
-		<g:north size='20'>
-			<service:ServicesList ui:field='servicesList'
-				styleName='{style.margins}' />
-		</g:north>
 		<g:center>
-			<service:ServiceDetail ui:field='serviceDetail'
+			<g:SimplePanel ui:field='centerContainer'
 				styleName='{style.margins}' />
 		</g:center>
 	</g:DockLayoutPanel>
