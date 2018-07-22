@@ -1,5 +1,7 @@
 package net.nearbyservices.client;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -7,15 +9,19 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import net.nearbyservices.shared.ServiceDTO;
 
@@ -37,6 +43,7 @@ public class Nearbyservices implements EntryPoint {
 		CssResource css();
 	}
 
+	private Map<String, Widget> history;
 	@UiField
 	TopPanel topPanel;
 	@UiField
@@ -50,8 +57,7 @@ public class Nearbyservices implements EntryPoint {
 	private static final Binder binder = GWT.create(Binder.class);
 
 	public void onModuleLoad() {
-		GWT.<GlobalResources> create(GlobalResources.class).css()
-				.ensureInjected();
+		GWT.<GlobalResources>create(GlobalResources.class).css().ensureInjected();
 		DockLayoutPanel outer = binder.createAndBindUi(this);
 		Window.enableScrolling(false);
 		Window.setMargin("0px");
@@ -60,12 +66,37 @@ public class Nearbyservices implements EntryPoint {
 		topElem.getStyle().setOverflow(Overflow.VISIBLE);
 		servicesList = new ServicesList();
 		serviceDetail = new ServiceDetail();
+		history = new HashMap<>();
+		RootLayoutPanel root = RootLayoutPanel.get();
+		root.add(outer);
+		History.addValueChangeHandler(new ValueChangeHandler<String>() {
+
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				String historyToken = event.getValue();
+				logger.log(Level.INFO, "historyToken " + historyToken);
+				try {
+					if (history.containsKey(historyToken)) {
+						replaceWidget(history.get(historyToken));
+					} else {
+						replaceWidget(servicesList);
+						servicesList.update(null);
+					}
+
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+				}
+			}
+
+		});
+
 		shortcuts.setListener(new Shortcuts.Listener() {
 
 			@Override
 			public void onItemSelected(String item) {
-				centerContainer.clear();
-				centerContainer.setWidget(servicesList);
+				logger.log(Level.INFO, "shortcuts onItemSelected");
+				history.put(item, servicesList);
+				History.newItem(item);
 				servicesList.update(item);
 			}
 		});
@@ -73,14 +104,13 @@ public class Nearbyservices implements EntryPoint {
 
 			@Override
 			public void onItemSelected(ServiceDTO item) {
-				centerContainer.clear();
-				centerContainer.setWidget(serviceDetail);
+				logger.log(Level.INFO, "servicesList onItemSelected");
+				history.put(item.toString(), serviceDetail);
+				History.newItem(item.toString());
 				serviceDetail.setItem(item);
 			}
 		});
 
-		RootLayoutPanel root = RootLayoutPanel.get();
-		root.add(outer);
 		topPanel.setCompositeListener(new CompositeListener() {
 
 			@Override
@@ -89,6 +119,12 @@ public class Nearbyservices implements EntryPoint {
 			}
 		});
 
+		replaceWidget(servicesList);
+	}
+
+	private void replaceWidget(Widget widget) {
+		centerContainer.clear();
+		centerContainer.setWidget(widget);
 	}
 
 }
