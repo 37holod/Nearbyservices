@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ServiceDetail extends Composite {
+	private ServiceDTO item;
 
 	interface Binder extends UiBinder<Widget, ServiceDetail> {
 	}
@@ -22,12 +23,15 @@ public class ServiceDetail extends Composite {
 	@UiField
 	HTML body;
 
-
-	public ServiceDetail() {
+	public ServiceDetail(ServiceDTO item) {
+		this.item = item;
 		initWidget(binder.createAndBindUi(this));
-	}
-
-	public void setItem(ServiceDTO item) {
 		body.setHTML(item.getDetail());
 	}
+
+	@Override
+	public String toString() {
+		return "ServiceDetail/" + item.getId();
+	}
+
 }

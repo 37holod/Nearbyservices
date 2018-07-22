@@ -112,4 +112,11 @@ public class ServicesList extends Composite {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "ServicesList []";
+	}
+	
+	
+
 }

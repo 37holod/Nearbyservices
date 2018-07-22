@@ -17,12 +17,14 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import net.nearbyservices.client.TopPanel.Listener;
 import net.nearbyservices.shared.ServiceDTO;
 
 /**
@@ -43,7 +45,7 @@ public class Nearbyservices implements EntryPoint {
 		CssResource css();
 	}
 
-	private Map<String, Widget> history;
+	private Map<String, Composite> history;
 	@UiField
 	TopPanel topPanel;
 	@UiField
@@ -52,7 +54,6 @@ public class Nearbyservices implements EntryPoint {
 	SimplePanel centerContainer;
 
 	private ServicesList servicesList;
-	private ServiceDetail serviceDetail;
 
 	private static final Binder binder = GWT.create(Binder.class);
 
@@ -65,7 +66,7 @@ public class Nearbyservices implements EntryPoint {
 		topElem.getStyle().setZIndex(2);
 		topElem.getStyle().setOverflow(Overflow.VISIBLE);
 		servicesList = new ServicesList();
-		serviceDetail = new ServiceDetail();
+		AddService addService = new AddService();
 		history = new HashMap<>();
 		RootLayoutPanel root = RootLayoutPanel.get();
 		root.add(outer);
@@ -95,8 +96,9 @@ public class Nearbyservices implements EntryPoint {
 			@Override
 			public void onItemSelected(String item) {
 				logger.log(Level.INFO, "shortcuts onItemSelected");
-				history.put(item, servicesList);
-				History.newItem(item);
+				String key = servicesList.toString();
+				history.put(key, servicesList);
+				History.newItem(key);
 				servicesList.update(item);
 			}
 		});
@@ -105,20 +107,30 @@ public class Nearbyservices implements EntryPoint {
 			@Override
 			public void onItemSelected(ServiceDTO item) {
 				logger.log(Level.INFO, "servicesList onItemSelected");
-				history.put(item.toString(), serviceDetail);
-				History.newItem(item.toString());
-				serviceDetail.setItem(item);
+				ServiceDetail serviceDetail = new ServiceDetail(item);
+				String key = serviceDetail.toString();
+				history.put(key, serviceDetail);
+				History.newItem(key);
 			}
 		});
+		topPanel.setListener(new Listener() {
 
-		topPanel.setCompositeListener(new CompositeListener() {
+			@Override
+			public void onAddServiceClicked() {
+
+				String key = addService.toString();
+				history.put(key, addService);
+				History.newItem(key);
+
+			}
+		});
+		addService.setListener(new AddService.Listener() {
 
 			@Override
 			public void updateAll() {
 				shortcuts.fetchTitles();
 			}
 		});
-
 		replaceWidget(servicesList);
 	}
 

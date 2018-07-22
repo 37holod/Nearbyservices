@@ -14,6 +14,7 @@ import net.nearbyservices.shared.ServiceDTO;
 public class ServiceListItem extends Composite {
 	private final ItemServiceAsync itemService = GWT.create(ItemService.class);
 	private ServiceDTO serviceDTO;
+	public static final int MAX_LENGTH = 200;
 
 	interface Binder extends UiBinder<Widget, ServiceListItem> {
 	}
@@ -39,8 +40,15 @@ public class ServiceListItem extends Composite {
 		// button.setText(author);
 		authorLabel.setText(serviceDTO.getAutor());
 		subjectLabel.setText(serviceDTO.getTitle());
-		detailsLabel.setText(serviceDTO.getDetail());
+		detailsLabel.setText(cut(serviceDTO.getDetail()));
 		image.setUrl("/images/ava.png");
+	}
+
+	private String cut(String detail) {
+		if (detail.length() > MAX_LENGTH) {
+			return detail.substring(0, MAX_LENGTH).concat("...");
+		}
+		return null;
 	}
 
 }

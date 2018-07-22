@@ -23,7 +23,7 @@ public class ServiceDTO implements Serializable {
 	@Column(name = "TITLE", nullable = false)
 	private String title;
 
-	@Column(name = "DETAIL")
+	@Column(name = "DETAIL", columnDefinition="TEXT")
 	private String detail;
 
 	@Column(name = "AUTOR", nullable = false)
