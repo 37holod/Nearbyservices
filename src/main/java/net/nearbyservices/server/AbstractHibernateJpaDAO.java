@@ -108,7 +108,7 @@ public abstract class AbstractHibernateJpaDAO<K, E> {
 			logger.log(Level.INFO, "selectIdsWithTitle " + title);
 			String queryStr = "SELECT h.id FROM " + entityClass.getName()
 					+ " h WHERE h.title = :tit";
-			Query query = getEntityManager().createQuery(queryStr, entityClass)
+			Query query = getEntityManager().createQuery(queryStr)
 					.setParameter("tit", title);
 			resultList = query.getResultList();
 			logger.log(Level.INFO, "resultList size " + resultList.size());
