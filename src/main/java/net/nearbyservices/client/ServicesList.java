@@ -28,6 +28,9 @@ import net.nearbyservices.shared.ServiceDTO;
 public class ServicesList extends Composite implements ServicesListI {
 	Logger logger = Logger.getLogger(ServicesList.class.getName());
 	private final ItemServiceAsync itemService = GWT.create(ItemService.class);
+	private int startIndex;
+	private int count;
+	private SelectionStrategy selectionStrategy;
 
 	public interface Listener {
 		void onItemSelected(ServiceDTO item);
@@ -62,8 +65,7 @@ public class ServicesList extends Composite implements ServicesListI {
 	private void initHeader() {
 		header.setText(0, 0, "Services");
 		header.setWidget(0, 1, navBar);
-		header.getCellFormatter().setHorizontalAlignment(0, 1,
-				HasHorizontalAlignment.ALIGN_RIGHT);
+		header.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_RIGHT);
 	}
 
 	public void setListener(Listener listener) {
@@ -113,6 +115,21 @@ public class ServicesList extends Composite implements ServicesListI {
 
 		abstract void selection(AsyncCallback<List<ServiceDTO>> asyncCallback);
 
+		int max;
+
+		protected void computeNav(List<Long> result) {
+			logger.log(Level.INFO, "selection size " + result.size());
+			count = result.size();
+			max = startIndex + VISIBLE_SERVICES_COUNT;
+			if (max > count) {
+				max = count;
+			}
+			logger.log(Level.INFO,
+					"selection update count = " + count + " startIndex = " + startIndex + " max = " + max);
+			navBar.update(startIndex, count, max);
+
+		}
+
 	}
 
 	class WithTitle extends SelectionStrategy {
@@ -128,23 +145,13 @@ public class ServicesList extends Composite implements ServicesListI {
 
 				@Override
 				public void onSuccess(List<Long> result) {
-					logger.log(Level.INFO, "selection size " + result.size());
-					count = result.size();
-					int max = startIndex + VISIBLE_SERVICES_COUNT;
-					if (max > count) {
-						max = count;
-					}
-					logger.log(Level.INFO, "selection update count = " + count
-							+ " startIndex = " + startIndex + " max = " + max);
-					navBar.update(startIndex, count, max);
-					itemService.findWithTitle(item, startIndex, max
-							- startIndex, asyncCallback);
+					computeNav(result);
+					itemService.findWithTitle(item, startIndex, max - startIndex, asyncCallback);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-
+					logger.log(Level.SEVERE, caught.getMessage(), caught);
 				}
 			});
 
@@ -158,15 +165,7 @@ public class ServicesList extends Composite implements ServicesListI {
 
 	}
 
-	private int startIndex;
-	int count;
-	private SelectionStrategy selectionStrategy;
-
 	class AllEntries extends SelectionStrategy {
-		public AllEntries() {
-
-			// TODO Auto-generated constructor stub
-		}
 
 		@Override
 		void selection(final AsyncCallback<List<ServiceDTO>> asyncCallback) {
@@ -174,23 +173,13 @@ public class ServicesList extends Composite implements ServicesListI {
 
 				@Override
 				public void onSuccess(List<Long> result) {
-					logger.log(Level.INFO, "selection size " + result.size());
-					count = result.size();
-					int max = startIndex + VISIBLE_SERVICES_COUNT;
-					if (max > count) {
-						max = count;
-					}
-					logger.log(Level.INFO, "selection update count = " + count
-							+ " startIndex = " + startIndex + " max = " + max);
-					navBar.update(startIndex, count, max);
-					itemService.findAllEntries(startIndex, max - startIndex,
-							asyncCallback);
+					computeNav(result);
+					itemService.findAllEntries(startIndex, max - startIndex, asyncCallback);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-
+					logger.log(Level.SEVERE, caught.getMessage(), caught);
 				}
 			});
 
@@ -205,8 +194,7 @@ public class ServicesList extends Composite implements ServicesListI {
 
 	public void refresh(String item) {
 		startIndex = 0;
-		selectionStrategy = item == null ? new AllEntries() : new WithTitle(
-				item);
+		selectionStrategy = item == null ? new AllEntries() : new WithTitle(item);
 		doUpdate();
 	}
 
