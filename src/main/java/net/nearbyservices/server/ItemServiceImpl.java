@@ -17,7 +17,8 @@ import net.nearbyservices.shared.ServiceDTO;
 import net.nearbyservices.shared.Validator;
 
 @Service("itemService")
-public class ItemServiceImpl extends RemoteServiceServlet implements ItemService {
+public class ItemServiceImpl extends RemoteServiceServlet implements
+		ItemService {
 
 	private static final long serialVersionUID = -6547737229424190373L;
 
@@ -29,8 +30,10 @@ public class ItemServiceImpl extends RemoteServiceServlet implements ItemService
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void saveOrUpdate(ServiceDTO serviceDto) throws Exception {
 
-		if (Validator.isBlank(serviceDto.getTitle()) || Validator.isBlank(serviceDto.getAutor())) {
-			throw new IllegalArgumentException("Please enter at least the Title and the Autor of the book");
+		if (Validator.isBlank(serviceDto.getTitle())
+				|| Validator.isBlank(serviceDto.getAutor())) {
+			throw new IllegalArgumentException(
+					"Please enter at least the Title and the Autor of the book");
 		}
 
 		try {
@@ -64,12 +67,28 @@ public class ItemServiceImpl extends RemoteServiceServlet implements ItemService
 		return serviceDAO.selectIds();
 	}
 
+	public List<Long> selectIdsWithTitle(String title) {
+		return serviceDAO.selectIdsWithTitle(title);
+	}
+
 	public List<ServiceDTO> findWithTitle(String title) {
 		return serviceDAO.findWithTitle(title);
 	}
 
 	public List<ServiceDTO> findAllEntries() {
 		return serviceDAO.findAll();
+	}
+
+	@Override
+	public List<ServiceDTO> findAllEntries(int start, int end) {
+		// TODO Auto-generated method stub
+		return serviceDAO.findAll(start, end);
+	}
+
+	@Override
+	public List<ServiceDTO> findWithTitle(String title, int start, int end) {
+
+		return serviceDAO.findWithTitle(title, start, end);
 	}
 
 }
