@@ -13,6 +13,10 @@
 	.linksDiv {
 		text-align: left;
 	}
+	
+	.addServiceLink {
+		text-decoration: underline;
+	}
 	</ui:style>
 
 	<g:HTMLPanel>
@@ -24,9 +28,8 @@
 			</div>
 
 			<div class='{style.linksDiv}'>
-				<g:Anchor href='javascript:;' ui:field='signInLink'>Test</g:Anchor>
-				&nbsp;
-				<g:Anchor href='javascript:;' ui:field='addServiceLink'>Add service</g:Anchor>
+				<g:Anchor href='javascript:;' ui:field='addServiceLink'
+					styleName='{style.addServiceLink}'>Add service</g:Anchor>
 			</div>
 		</div>
 	</g:HTMLPanel>

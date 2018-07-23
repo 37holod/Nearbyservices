@@ -14,11 +14,19 @@ public interface ItemServiceAsync {
 
 	void findAllEntries(AsyncCallback<List<ServiceDTO>> callback);
 
+	void findAllEntries(int start, int end,
+			AsyncCallback<List<ServiceDTO>> callback);
+
 	void findWithTitle(String title, AsyncCallback<List<ServiceDTO>> callback);
+
+	void findWithTitle(String title, int start, int end,
+			AsyncCallback<List<ServiceDTO>> callback);
 
 	void saveOrUpdate(ServiceDTO item, AsyncCallback<Void> callback);
 
 	void selectIds(AsyncCallback<List<Long>> callback);
+
+	void selectIdsWithTitle(String title, AsyncCallback<List<Long>> callback);
 
 	void selectTitles(AsyncCallback<List<String>> callback);
 

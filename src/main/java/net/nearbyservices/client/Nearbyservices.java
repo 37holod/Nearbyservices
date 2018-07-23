@@ -58,7 +58,8 @@ public class Nearbyservices implements EntryPoint {
 	private static final Binder binder = GWT.create(Binder.class);
 
 	public void onModuleLoad() {
-		GWT.<GlobalResources>create(GlobalResources.class).css().ensureInjected();
+		GWT.<GlobalResources> create(GlobalResources.class).css()
+				.ensureInjected();
 		DockLayoutPanel outer = binder.createAndBindUi(this);
 		Window.enableScrolling(false);
 		Window.setMargin("0px");
@@ -66,7 +67,7 @@ public class Nearbyservices implements EntryPoint {
 		topElem.getStyle().setZIndex(2);
 		topElem.getStyle().setOverflow(Overflow.VISIBLE);
 		servicesList = new ServicesList();
-		AddService addService = new AddService();
+		final AddService addService = new AddService();
 		history = new HashMap<>();
 		RootLayoutPanel root = RootLayoutPanel.get();
 		root.add(outer);
@@ -81,7 +82,7 @@ public class Nearbyservices implements EntryPoint {
 						replaceWidget(history.get(historyToken));
 					} else {
 						replaceWidget(servicesList);
-						servicesList.update(null);
+						servicesList.refresh(null);
 					}
 
 				} catch (Exception e) {
@@ -99,7 +100,7 @@ public class Nearbyservices implements EntryPoint {
 				String key = servicesList.toString();
 				history.put(key, servicesList);
 				History.newItem(key);
-				servicesList.update(item);
+				servicesList.refresh(item);
 			}
 		});
 		servicesList.setListener(new ServicesList.Listener() {
