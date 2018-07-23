@@ -41,7 +41,7 @@ public class ServiceListItem extends Composite {
 		authorLabel.setText(serviceDTO.getAutor());
 		subjectLabel.setText(serviceDTO.getTitle());
 		detailsLabel.setText(cut(serviceDTO.getDetail()));
-		image.setUrl("/images/ava.png");
+		image.setUrl("images/ava.png");
 	}
 
 	private String cut(String detail) {

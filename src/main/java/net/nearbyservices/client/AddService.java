@@ -58,7 +58,7 @@ public class AddService extends Composite {
 		final TextBox textBoxSubject = new TextBox();
 		final TextArea textBoxDetail = new TextArea();
 		Button buttonAdd = new Button("Add");
-		Button buttonAdd50 = new Button("Add50");
+		Button buttonAdd50 = new Button("Generate");
 		final HTML serverResponseLabel = new HTML();
 		addServicesFt.getFlexCellFormatter().setColSpan(0, 0, 2);
 		addServicesFt.setWidget(1, 0, new Label("Name"));
@@ -98,15 +98,16 @@ public class AddService extends Composite {
 			public void onClick(ClickEvent event) {
 
 				try {
-					new RequestBuilder(RequestBuilder.GET, "/string/sometext.txt").sendRequest("",
+					new RequestBuilder(RequestBuilder.GET, "string/sometext.txt").sendRequest("",
 							new RequestCallback() {
 								@Override
 								public void onResponseReceived(Request req, Response resp) {
 									String text = resp.getText();
 									final DialogBox dialogBox = new DialogBox();
 									dialogBox.setText("Remote Procedure Call");
+									dialogBox.setWidget(new Label("Generation.."));
 									dialogBox.show();
-									save50(10, 0, text, new AsyncCallback<Void>() {
+									saveTest(10, 0, text, new AsyncCallback<Void>() {
 
 										@Override
 										public void onFailure(Throwable caught) {
@@ -141,7 +142,7 @@ public class AddService extends Composite {
 		});
 	}
 
-	private void save50(int number, int count, String detail, AsyncCallback<Void> asyncCallback) {
+	private void saveTest(final int number, final int count, final String detail, final AsyncCallback<Void> asyncCallback) {
 		saveBook("Name " + count, "Subject " + count, detail, new AsyncCallback<Void>() {
 
 			@Override
@@ -151,7 +152,7 @@ public class AddService extends Composite {
 
 			private void next() {
 				if (count < number) {
-					save50(number, count + 1, detail, asyncCallback);
+					saveTest(number, count + 1, detail, asyncCallback);
 				} else {
 					asyncCallback.onSuccess(null);
 				}
