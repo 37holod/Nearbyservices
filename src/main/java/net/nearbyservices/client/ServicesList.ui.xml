@@ -3,29 +3,24 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:service="urn:import:net.nearbyservices.client">
 
 	<ui:style>
-		.detail {
-		border: 1px solid #666;
-		background-color: white;
-		}
 
 		.outer {
 		cursor: pointer;
 		width: 100%;
 		height: 100%;
-		/* @alternate */
+		/*
+		@alternate */
 		cursor:
 		hand;
 		}
 
 		.header {
-		background: #eee;
-		border-bottom: 1px solid #666;
+		background:
+		#eee;
+		border-bottom: 1px
+		solid #666;
+		padding: 0.35em;
 		width: 100%;
-		padding: 0.4em;
-		}
-
-		.headerItem {
-		margin-bottom: 0.5em;
 		}
 
 		.servicesListVP {
@@ -33,10 +28,9 @@
 		align-content: center;
 		}
 
-		.regpad {
-		margin:
-		5px;
-		}
+
+
+
 	</ui:style>
 
 	<g:DockLayoutPanel styleName='{style.outer}' unit='EM'>

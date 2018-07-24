@@ -40,10 +40,7 @@ public class Nearbyservices implements EntryPoint {
 	interface Binder extends UiBinder<DockLayoutPanel, Nearbyservices> {
 	}
 
-	interface GlobalResources extends ClientBundle {
-		@Source("global.gss")
-		CssResource css();
-	}
+
 
 	private Map<String, Composite> history;
 	@UiField
@@ -58,8 +55,6 @@ public class Nearbyservices implements EntryPoint {
 	private static final Binder binder = GWT.create(Binder.class);
 
 	public void onModuleLoad() {
-		GWT.<GlobalResources> create(GlobalResources.class).css()
-				.ensureInjected();
 		DockLayoutPanel outer = binder.createAndBindUi(this);
 		Window.enableScrolling(false);
 		Window.setMargin("0px");

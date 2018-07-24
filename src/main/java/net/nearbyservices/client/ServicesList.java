@@ -63,9 +63,11 @@ public class ServicesList extends Composite implements ServicesListI {
 	}
 
 	private void initHeader() {
-		header.setText(0, 0, "Services");
+		header.setHTML(0, 0, "<b>Services</b>");
 		header.setWidget(0, 1, navBar);
-		header.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_RIGHT);
+		header.getFlexCellFormatter().setHorizontalAlignment(0, 1,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+
 	}
 
 	public void setListener(Listener listener) {
@@ -124,8 +126,8 @@ public class ServicesList extends Composite implements ServicesListI {
 			if (max > count) {
 				max = count;
 			}
-			logger.log(Level.INFO,
-					"selection update count = " + count + " startIndex = " + startIndex + " max = " + max);
+			logger.log(Level.INFO, "selection update count = " + count
+					+ " startIndex = " + startIndex + " max = " + max);
 			navBar.update(startIndex, count, max);
 
 		}
@@ -146,7 +148,8 @@ public class ServicesList extends Composite implements ServicesListI {
 				@Override
 				public void onSuccess(List<Long> result) {
 					computeNav(result);
-					itemService.findWithTitle(item, startIndex, max - startIndex, asyncCallback);
+					itemService.findWithTitle(item, startIndex, max
+							- startIndex, asyncCallback);
 				}
 
 				@Override
@@ -174,7 +177,8 @@ public class ServicesList extends Composite implements ServicesListI {
 				@Override
 				public void onSuccess(List<Long> result) {
 					computeNav(result);
-					itemService.findAllEntries(startIndex, max - startIndex, asyncCallback);
+					itemService.findAllEntries(startIndex, max - startIndex,
+							asyncCallback);
 				}
 
 				@Override
@@ -194,7 +198,8 @@ public class ServicesList extends Composite implements ServicesListI {
 
 	public void refresh(String item) {
 		startIndex = 0;
-		selectionStrategy = item == null ? new AllEntries() : new WithTitle(item);
+		selectionStrategy = item == null ? new AllEntries() : new WithTitle(
+				item);
 		doUpdate();
 	}
 
